@@ -1,0 +1,74 @@
+:root {
+  --primary-color: #2b1887;
+  --secondary-color: #2d41a7;
+  --gray-color: #dddddd;
+  --white-color: #ffffff;
+  --black-color: #000000;
+}
+
+body {
+  background-color: var(--primary-color);
+  color: #fff;
+  height: 100%;
+  padding: 60px;
+}
+
+.container {
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+.btn {
+  border-radius: 8px;
+  height: 38px;
+  padding-inline: 9px;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0em;
+  text-align: left;
+  cursor: pointer;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn.primary {
+  background-color: var(--primary-color);
+  color: var(--white-color);
+}
+
+.btn.secondary {
+  background-color: var(--secondary-color);
+  color: var(--white-color);
+}
+
+.btn.gray {
+  background-color: var(--gray-color);
+  color: var(--black-color);
+}
+
+.close-btn {
+  width: 14px;
+  height: 14px;
+}
+
+.badge {
+  padding: 8px 7px;
+  background-color: var(--gray-color);
+  color: var(--black-color);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0em;
+  text-align: left;
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.badge.selected {
+    background-color: #E42C5F;
+    color: var(--white-color);
+}
