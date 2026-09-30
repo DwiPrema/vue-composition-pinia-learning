@@ -1,42 +1,68 @@
 <script setup>
+import { reactive } from 'vue';
+import Task from './components/Task.vue';
 
-const tasks= [
-    {
-      name: "Website design",
-      description: "Define the style guide, branding and create the webdesign on Figma.",
-      completed: true
-    },
-    {
-      name: "Website development",
-      description: "Develop the portfolio website using Vue JS.",
-      completed: false
-    },
-    {
-      name: "Hosting and infrastructure",
-      description: "Define hosting, domain and infrastructure for the portfolio website.",
-      completed: false
-    },
-    {
-      name: "Composition API",
-      description: "Learn how to use the composition API and how it compares to the options API.",
-      completed: true
-    },
-    {
-      name: "Pinia",
-      description: "Learn how to setup a store using Pinia.",
-      completed: true
-    },
-    {
-      name: "Groceries",
-      description: "Buy rice, apples and potatos.",
-      completed: false
-    },
-    {
-      name: "Bank account",
-      description: "Open a bank account for my freelance business.",
-      completed: false
-    }
-];
+const tasks = reactive([
+  {
+    name: "Website design",
+    description: "Define the style guide, branding and create the webdesign on Figma.",
+    completed: true,
+    id: 1,
+  },
+  {
+    name: "Website development",
+    description: "Develop the portfolio website using Vue JS.",
+    completed: false,
+    id: 2,
+  },
+  {
+    name: "Hosting and infrastructure",
+    description: "Define hosting, domain and infrastructure for the portfolio website.",
+    completed: false,
+    id: 3
+  },
+  {
+    name: "Composition API",
+    description: "Learn how to use the composition API and how it compares to the options API.",
+    completed: true,
+    id: 4
+  },
+  {
+    name: "Pinia",
+    description: "Learn how to setup a store using Pinia.",
+    completed: true,
+    id: 5
+  },
+  {
+    name: "Groceries",
+    description: "Buy rice, apples and potatos.",
+    completed: false,
+    id: 6
+  },
+  {
+    name: "Bank account",
+    description: "Open a bank account for my freelance business.",
+    completed: false,
+    id: 7
+  }
+])
+
+let newTask = { completed: false }
+
+function addTask() {
+  if (newTask.name && newTask.description) {
+    newTask.id = Math.max(...tasks.map(task => task.id)) + 1
+    tasks.push(newTask)
+    newTask = { completed: false }
+  } else {
+    alert("Please enter the title and description for the task.")
+  }
+}
+
+
+function toggleCompleted(id) {
+  console.log('clicked', id);
+}
 
 </script>
 
@@ -50,7 +76,7 @@ const tasks= [
         </h1>
       </div>
     </div>
-    
+
     <div class="filters">
       <div>
         <p>Filter by state</p>
@@ -69,56 +95,26 @@ const tasks= [
     </div>
 
     <div class="tasks">
-      
-      <div class="task">
-        <h3>
-          Website design
-        </h3>
-        <p>
-          Define the style guide, branding and create the webdesign on Figma.
-        </p>
-        <div class="task-check">
-          <input type="checkbox" checked />
-          <label>
-            Done
-          </label>
-        </div>
-      </div>
 
-      <div class="task">
-        <h3>
-          Website development
-        </h3>
-        <p>
-          Develop the portfolio website using Vue JS.
-        </p>
-        <div class="task-check">
-          <input type="checkbox"/>
-          <label>
-            To-Do
-          </label>
-        </div>
-      </div>
+      <Task @toggleCompleted="toggleCompleted" v-for="(task, index) in tasks" :task="task" :key="index"/>
 
     </div>
 
     <div class="add-task">
       <h3>Add a new task</h3>
-      <input type="text" name="title" placeholder="Enter a title..."><br />
-      <textarea name="description" rows="4" placeholder="Enter a description..." /><br />
-      <button class="btn gray">Add Task</button>
-
+      <input v-model="newTask.name" type="text" name="title" placeholder="Enter a title..."><br />
+      <textarea v-model="newTask.description" name="description" rows="4" placeholder="Enter a description..." /><br />
+      <button @click="addTask" class="btn gray">Add Task</button>
     </div>
 
   </main>
-  
-   
+
+
 
 </template>
 
 
 <style lang="scss" scoped>
-
 .header {
   display: flex;
   justify-content: space-between;
@@ -186,87 +182,11 @@ const tasks= [
   }
 }
 
-.task {
-  display: flex;
-  flex-direction: column;
-  background-color: var(--white-color);
-  color: var(--black-color);
-  padding: 20px;
-  border-radius: 12px;
-  position: relative;
-
-
-  h3 {
-    font-size: 20px;
-    font-weight: 700;
-    line-height: 21px;
-    letter-spacing: 0em;
-    text-align: left;
-  }
-
-  p {
-    margin-top: 24px;
-    margin-bottom: 12px;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 16px;
-    letter-spacing: 0em;
-    text-align: left;
-  }
-
-
-  .task-check {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-
-    label {
-      font-size: 13px;
-      font-weight: 400;
-      line-height: 16px;
-      letter-spacing: 0em;
-      text-align: left;
-      margin-left: 5px;
-      cursor: pointer;
-    }
-
-    input {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 18px;
-      height: 18px;
-      border-radius: 100%;
-      border: 0.77px solid #AEAEB2;
-      appearance: none;
-      cursor: pointer;
-
-
-      &:checked {
-        background-color: #0A7AFF;
-        border-color: #0A7AFF;
-
-        &::before {
-          content: '';
-          display: block;
-          width: 4.5px;
-          height: 9px;
-          border: solid white;
-          border-width: 0 2px 2px 0;
-          transform: rotate(45deg);
-        }
-      }
-    }
-  }
-}
-
 .add-task {
   margin-top: 60px;
 
-  input, textarea {
+  input,
+  textarea {
     width: 360px;
     max-width: 100%;
     margin-top: 12px;
@@ -278,6 +198,4 @@ const tasks= [
     margin-top: 12px;
   }
 }
-
-
 </style>
