@@ -2,6 +2,8 @@
 import { computed, reactive, ref } from 'vue';
 import Task from './components/Task.vue';
 import Filter from './components/Filter.vue';
+import ModalWindow from './components/modal/ModalWindow.vue';
+import AddTaskModal from './components/modal/AddTaskModal.vue';
 
 const tasks = reactive([
   {
@@ -52,6 +54,8 @@ let newTask = { completed: false }
 
 let filterBy = ref("")
 
+let modalIsActive = ref(false);
+
 function addTask() {
   if (newTask.name && newTask.description) {
     newTask.id = Math.max(...tasks.map(task => task.id)) + 1
@@ -65,7 +69,7 @@ function addTask() {
 
 function toggleCompleted(id) {
   tasks.forEach(task => {
-    if(task.id === id) {
+    if (task.id === id) {
       task.completed = !task.completed
     }
   })
@@ -76,11 +80,11 @@ function setFilter(value) {
 }
 
 const filteredTasks = computed(() => {
-  switch(filterBy.value) {
+  switch (filterBy.value) {
     case 'todo':
       return tasks.filter(task => !task.completed);
 
-    case 'done': 
+    case 'done':
       return tasks.filter(task => task.completed)
 
     default:
@@ -99,23 +103,20 @@ const filteredTasks = computed(() => {
           Tasks Manager
         </h1>
       </div>
+      <div class="header-side">
+        <button @click="modalIsActive = true" class="btn secondary">+ Add Task</button>
+      </div>
     </div>
 
-    <Filter :filterBy="filterBy" @setFilter="setFilter"/>
+    <Filter :filterBy="filterBy" @setFilter="setFilter" />
 
     <div class="tasks">
-
-      <Task @toggleCompleted="toggleCompleted" v-for="(task, index) in filteredTasks" :task="task" :key="index"/>
-
+      <Task @toggleCompleted="toggleCompleted" v-for="(task, index) in filteredTasks" :task="task" :key="index" />
     </div>
 
-    <div class="add-task">
-      <h3>Add a new task</h3>
-      <input v-model="newTask.name" type="text" name="title" placeholder="Enter a title..."><br />
-      <textarea v-model="newTask.description" name="description" rows="4" placeholder="Enter a description..." /><br />
-      <button @click="addTask" class="btn gray">Add Task</button>
-    </div>
-
+    <ModalWindow @closePopup="modalIsActive = false" v-if="modalIsActive">
+      <AddTaskModal />
+    </ModalWindow>
   </main>
 
 
