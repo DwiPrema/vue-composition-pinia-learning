@@ -1,6 +1,7 @@
 <script setup>
-import { reactive } from 'vue';
+import { computed, reactive, ref } from 'vue';
 import Task from './components/Task.vue';
+import Filter from './components/Filter.vue';
 
 const tasks = reactive([
   {
@@ -49,6 +50,8 @@ const tasks = reactive([
 
 let newTask = { completed: false }
 
+let filterBy = ref("")
+
 function addTask() {
   if (newTask.name && newTask.description) {
     newTask.id = Math.max(...tasks.map(task => task.id)) + 1
@@ -61,8 +64,29 @@ function addTask() {
 
 
 function toggleCompleted(id) {
-  console.log('clicked', id);
+  tasks.forEach(task => {
+    if(task.id === id) {
+      task.completed = !task.completed
+    }
+  })
 }
+
+function setFilter(value) {
+  filterBy.value = value;
+}
+
+const filteredTasks = computed(() => {
+  switch(filterBy.value) {
+    case 'todo':
+      return tasks.filter(task => !task.completed);
+
+    case 'done': 
+      return tasks.filter(task => task.completed)
+
+    default:
+      return tasks;
+  }
+})
 
 </script>
 
@@ -77,26 +101,11 @@ function toggleCompleted(id) {
       </div>
     </div>
 
-    <div class="filters">
-      <div>
-        <p>Filter by state</p>
-        <div class="badges">
-          <div class="badge">
-            To-Do
-          </div>
-          <div class="badge">
-            Done
-          </div>
-          <span class="clear">
-            x clear
-          </span>
-        </div>
-      </div>
-    </div>
+    <Filter :filterBy="filterBy" @setFilter="setFilter"/>
 
     <div class="tasks">
 
-      <Task @toggleCompleted="toggleCompleted" v-for="(task, index) in tasks" :task="task" :key="index"/>
+      <Task @toggleCompleted="toggleCompleted" v-for="(task, index) in filteredTasks" :task="task" :key="index"/>
 
     </div>
 
@@ -136,38 +145,6 @@ function toggleCompleted(id) {
     .secondary {
       margin-left: 12px;
     }
-  }
-
-}
-
-.filters {
-  display: flex;
-  flex-direction: column;
-  margin: 40px 0;
-
-  p {
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 21px;
-    letter-spacing: 0em;
-    text-align: left;
-  }
-
-  .badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin: 14px 0;
-    align-items: center;
-  }
-
-  .clear {
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 16px;
-    letter-spacing: 0em;
-    text-align: left;
-    cursor: pointer;
   }
 
 }
