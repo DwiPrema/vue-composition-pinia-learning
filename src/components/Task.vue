@@ -1,5 +1,9 @@
 <script setup>
+import { useTasksStore } from '@/stores/tasksStore.js';
+
 const props = defineProps(['task'])
+
+const store = useTasksStore()
 </script>
 
 <template>
@@ -11,7 +15,7 @@ const props = defineProps(['task'])
             {{ task.description }}
         </p>
         <div class="task-check">
-            <input type="checkbox" @click="$emit('toggleCompleted', task.id)" :checked="task.completed" />
+            <input type="checkbox" @click="store.toggleCompleted(task.id)" :checked="task.completed" />
             <label>
                 {{task.completed ? "Done" : "Todo"}}
             </label>
