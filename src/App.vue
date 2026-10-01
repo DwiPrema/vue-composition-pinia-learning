@@ -7,6 +7,10 @@ import {useTasksStore} from './stores/tasksStore.js';
 
 const store = useTasksStore()
 
+store.$subscribe((mutation, state) => {
+  localStorage.setItem('tasks', JSON.stringify(state.tasks))
+})
+
 </script>
 
 <template>
@@ -26,7 +30,7 @@ const store = useTasksStore()
     <Filter />
 
     <div class="tasks">
-      <Task v-for="(task, index) in store.filteredTasks" :task="task" :key="index" />
+      <Task v-for="task in store.filteredTasks" :task="task" :key="task.id" />
     </div>
 
     <ModalWindow @closePopup="store.closeModal" v-if="store.modalIsActive">
